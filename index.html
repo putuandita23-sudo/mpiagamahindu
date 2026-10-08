@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Darsana Quest - Petualangan Filsafat Hindu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 50%, #f0fdf4 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 50px;
+      animation: float 25s infinite linear;
+    }
+    .cloud::before, .cloud::after {
+      content: '';
+      position: absolute;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 50%;
+    }
+    .cloud::before { width: 50px; height: 50px; top: -20px; left: 15px; }
+    .cloud::after { width: 70px; height: 70px; top: -35px; right: 15px; }
+
+    @keyframes float {
+      0% { transform: translateX(-200px); }
+      100% { transform: translateX(100vw); }
+    }
+
+    .bounce-gentle {
+      animation: bounce 3s infinite ease-in-out;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .card-heaven {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border: 3px solid #7dd3fc;
+      box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.25);
+    }
+    
+    /* Custom Scrollbar untuk area materi */
+    .custom-scroll::-webkit-scrollbar { width: 8px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #e0f2fe; border-radius: 10px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #7dd3fc; border-radius: 10px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+  </style>
+</head>
+<body class="p-4 md:p-8 text-sky-950 relative">
+
+  <!-- Awan Latar Belakang -->
+  <div class="cloud w-40 h-12 top-10" style="animation-delay: 0s;"></div>
+  <div class="cloud w-56 h-16 top-40" style="animation-delay: -7s;"></div>
+  <div class="cloud w-48 h-14 top-80" style="animation-delay: -15s;"></div>
+  <div class="cloud w-60 h-16 top-96" style="animation-delay: -3s;"></div>
+
+  <div class="max-w-4xl mx-auto relative z-10">
+
+    <!-- Header Status & Skin (Tersembunyi sebelum login) -->
+    <header id="mainHeader" class="hidden card-heaven rounded-3xl p-4 mb-6 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center gap-4">
+        <button onclick="openSkinModal()" class="text-4xl p-2 bg-sky-100 hover:bg-sky-200 rounded-2xl border-2 border-sky-300 transition bounce-gentle" title="Ganti Skin Resi">
+          <span id="currentSkinEmoji">🧘‍♂️</span>
+        </button>
+        <div>
+          <h2 id="studentInfo" class="font-extrabold text-sky-800 text-lg">Siswa</h2>
+          <p class="text-xs font-semibold text-sky-600">Ditemani <span id="currentSkinName">Resi Patanjali</span></p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 md:gap-6 bg-white/80 px-4 py-2 rounded-2xl border border-sky-200">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">❤️</span>
+          <span id="livesText" class="font-black text-xl text-rose-500">5</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">⭐</span>
+          <span id="xpText" class="font-black text-xl text-amber-500">0 XP</span>
+        </div>
+        <button onclick="toggleSound()" id="soundBtn" class="text-2xl p-1 hover:scale-110 transition">🔊</button>
+      </div>
+    </header>
+
+    <main class="card-heaven rounded-3xl p-6 md:p-8 min-h-[500px] flex flex-col justify-center relative">
+      
+      <!-- Layar Form Login -->
+      <div id="loginScreen" class="max-w-md mx-auto w-full text-center">
+        <div class="text-6xl mb-4 bounce-gentle">🌸</div>
+        <h1 class="text-3xl font-extrabold text-sky-800 mb-2">Darsana Quest</h1>
+        <p class="text-sky-600 text-sm mb-8 font-semibold">Persiapkan dirimu. Masukkan data diri sebelum memulai pendakian ilmu.</p>
+        
+        <div class="space-y-4 text-left">
+          <div>
+            <label class="block text-xs font-bold text-sky-700 mb-1 ml-2">Nama Lengkap</label>
+            <input type="text" id="inputName" placeholder="Contoh: Arjuna" class="w-full p-3 rounded-2xl border-2 border-sky-200 focus:border-sky-400 focus:ring-0 outline-none bg-sky-50 transition" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-sky-700 mb-1 ml-2">Kelas</label>
+            <input type="text" id="inputClass" placeholder="Contoh: X IPA 1" class="w-full p-3 rounded-2xl border-2 border-sky-200 focus:border-sky-400 focus:ring-0 outline-none bg-sky-50 transition" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-sky-700 mb-1 ml-2">No. Absen</label>
+            <input type="number" id="inputAbsen" placeholder="Contoh: 12" class="w-full p-3 rounded-2xl border-2 border-sky-200 focus:border-sky-400 focus:ring-0 outline-none bg-sky-50 transition" />
+          </div>
+        </div>
+
+        <button onclick="startJourney()" class="mt-8 w-full bg-emerald-400 hover:bg-emerald-500 text-white font-extrabold px-6 py-4 rounded-2xl shadow-lg hover:scale-[1.02] transition text-lg">
+          Mulai Perjalanan 🚀
+        </button>
+      </div>
+
+      <!-- Menu Pilihan Topik -->
+      <div id="topicSelectScreen" class="hidden">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-extrabold text-sky-800 mb-2">Perpustakaan Pengetahuan</h1>
+          <p class="text-sky-600 text-sm">Pelajari keenam filsafat (Sad Darsana) ini dengan seksama. Ujian menanti di akhir.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8" id="topicGrid"></div>
+        
+        <div class="border-t-2 border-sky-100 pt-6 text-center mt-auto">
+          <button onclick="startFinalQuiz()" class="bg-amber-400 hover:bg-amber-500 text-sky-900 font-extrabold px-8 py-4 rounded-2xl shadow-lg hover:scale-105 transition flex items-center justify-center gap-3 w-full md:w-auto md:mx-auto">
+            <span class="text-2xl">📜</span> Ujian Akhir (10 Soal)
+          </button>
+          <p class="text-xs text-sky-500 font-semibold mt-3">Pastikan kamu telah membaca semua materi sebelum memulai ujian.</p>
+        </div>
+      </div>
+
+      <!-- Layar Baca Materi -->
+      <div id="materialScreen" class="hidden flex-col h-full absolute inset-0 bg-white/95 rounded-3xl p-6 md:p-8 z-20 overflow-hidden">
+        <div class="flex justify-between items-center mb-4 pb-2 border-b-2 border-sky-100 shrink-0">
+          <span id="materialBadge" class="bg-sky-200 text-sky-800 font-bold px-3 py-1 rounded-full text-xs">Materi Darsana</span>
+          <button onclick="showTopicSelect()" class="text-sky-600 hover:text-sky-800 font-bold text-sm bg-sky-50 px-3 py-1.5 rounded-xl transition">
+            ← Kembali ke Menu
+          </button>
+        </div>
+        
+        <div class="overflow-y-auto custom-scroll pr-2 pb-10 flex-grow">
+          <div class="flex items-center gap-4 mb-6">
+            <span id="materialIcon" class="text-5xl"></span>
+            <div>
+              <h2 id="materialTitle" class="text-2xl md:text-3xl font-extrabold text-sky-900"></h2>
+              <p id="materialSubtitle" class="font-bold text-sky-600"></p>
+            </div>
+          </div>
+          
+          <div class="text-sky-900 space-y-4 leading-relaxed text-sm md:text-base" id="materialContent"></div>
+        </div>
+      </div>
+
+      <!-- Layar Kuis -->
+      <div id="quizScreen" class="hidden absolute inset-0 bg-white rounded-3xl p-6 md:p-8 z-20 flex flex-col justify-between overflow-y-auto custom-scroll">
+        <div>
+          <div class="flex justify-between items-center mb-6">
+            <span id="quizProgress" class="text-sm font-extrabold text-sky-600 bg-sky-100 px-3 py-1 rounded-full">Soal 1/10</span>
+            <span class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">+10 XP</span>
+          </div>
+
+          <div class="bg-sky-50 p-5 rounded-2xl border-2 border-sky-100 mb-6 flex items-center gap-4 shadow-sm">
+            <span id="dialogSkinEmoji" class="text-4xl bg-white p-2 rounded-2xl shadow-sm">🧘‍♂️</span>
+            <div>
+              <p id="resiDialog" class="text-xs font-bold text-sky-500 mb-1">Resi:</p>
+              <p id="questionText" class="font-bold text-sky-900 text-base md:text-lg leading-snug"></p>
+            </div>
+          </div>
+
+          <div id="optionsContainer" class="grid grid-cols-1 gap-3 mb-6"></div>
+          
+          <div id="feedbackBox" class="hidden p-4 rounded-2xl font-bold text-sm mb-4 text-center transition-all"></div>
+        </div>
+
+        <div class="flex justify-end pt-4 border-t-2 border-sky-50 shrink-0">
+          <button id="nextBtn" onclick="nextQuestion()" class="hidden bg-sky-500 hover:bg-sky-600 text-white font-extrabold px-8 py-3 rounded-2xl shadow transition w-full md:w-auto">
+            Lanjut →
+          </button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal Pilih Skin Resi -->
+  <div id="skinModal" class="fixed inset-0 bg-sky-900/40 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+    <div class="card-heaven rounded-3xl p-6 max-w-md w-full">
+      <h3 class="text-xl font-extrabold text-sky-900 mb-4 text-center">🌸 Pendamping Belajar 🌸</h3>
+      <p class="text-center text-sky-600 text-xs mb-6 font-semibold">Pilih resi yang akan menemanimu dalam keheningan.</p>
+      <div class="grid grid-cols-2 gap-3 mb-6" id="skinList"></div>
+      <button onclick="closeSkinModal()" class="w-full bg-sky-400 hover:bg-sky-500 text-white font-bold py-2.5 rounded-2xl transition">Tutup</button>
+    </div>
+  </div>
+
+  <!-- Modal Pesan Kustom -->
+  <div id="messageModal" class="fixed inset-0 bg-sky-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-[60]">
+    <div class="card-heaven rounded-3xl p-6 max-w-sm w-full text-center">
+      <div id="messageIcon" class="text-5xl mb-4">📜</div>
+      <h3 id="messageTitle" class="text-xl font-extrabold text-sky-900 mb-2"></h3>
+      <p id="messageText" class="text-sky-700 font-semibold mb-6 text-sm"></p>
+      <button onclick="closeMessageModal()" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 rounded-2xl transition">OK</button>
+    </div>
+  </div>
+
+  <script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let isMuted = false;
+
+    // Gain diturunkan (0.03) agar suara sangat lembut dan tidak mengganggu
+    function playTone(freq, type = 'sine', duration = 0.3) {
+      if (isMuted) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playSound(effect) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      if (effect === 'correct') {
+        playTone(523.25, 'sine', 0.2); // C5
+        setTimeout(() => playTone(659.25, 'sine', 0.4), 150); // E5
+      } else if (effect === 'wrong') {
+        playTone(311.13, 'sine', 0.4); // Eb4 - diubah ke sine agar lebih lembut
+      } else if (effect === 'click') {
+        playTone(440, 'sine', 0.1);
+      } else if (effect === 'win
